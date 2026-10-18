@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RedEdit logic editor</title>
+<link rel="stylesheet" href="./editor.css">
+</head>
+<body>
+<header>
+  <h1>RedEdit logic editor <span class="muted">prototype</span></h1>
+  <p class="muted">REDCap logic with highlighting, completion and checks, against a made-up longitudinal mood study. Type <kbd>[</kbd> for fields, press <kbd>Ctrl</kbd>+<kbd>Space</kbd> anywhere for suggestions.</p>
+</header>
+
+<main>
+  <section class="editor-col">
+    <div class="toolbar">
+      <label>Where this logic lives
+        <select id="context">
+          <option value="branching">Branching logic</option>
+          <option value="calc">Calculated field</option>
+          <option value="calctext">@CALCTEXT</option>
+        </select>
+      </label>
+      <label>Examples
+        <select id="examples"></select>
+      </label>
+    </div>
+
+    <div class="editor" id="editor">
+      <pre class="hl" id="hl" aria-hidden="true"></pre>
+      <textarea id="input" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Logic" aria-autocomplete="list" aria-controls="completions"></textarea>
+      <ul class="completions" id="completions" role="listbox" hidden></ul>
+    </div>
+    <div class="signature" id="signature" aria-live="polite"></div>
+
+    <div class="result" id="result"></div>
+    <ul class="diagnostics" id="diagnostics"></ul>
+  </section>
+
+  <aside class="side">
+    <section>
+      <h2>At the cursor</h2>
+      <div id="inspect" class="inspect muted">Put the cursor on a field or function.</div>
+    </section>
+    <section>
+      <h2>Fields</h2>
+      <div id="fields" class="fields"></div>
+    </section>
+  </aside>
+</main>
+
+<script type="module" src="../dist/demo/editor.js"></script>
+</body>
+</html>

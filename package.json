@@ -1,0 +1,21 @@
+{
+  "name": "rededit",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A more efficient editor for REDCap projects",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test \"test/**/*.test.ts\"",
+    "demo": "npm run build && node scripts/serve.ts"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "typescript": "7.0.2"
+  }
+}
