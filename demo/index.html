@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RedEdit logic editor</title>
+<link rel="stylesheet" href="./editor.css">
+</head>
+<body>
+<header>
+  <h1>RedEdit logic editor <span class="muted">prototype</span></h1>
+  <p class="muted">REDCap logic with highlighting, completion and checks, against a made-up longitudinal mood study. Type <kbd>[</kbd> for fields, press <kbd>Ctrl</kbd>+<kbd>Space</kbd> anywhere for suggestions.</p>
+</header>
+
+<main>
+  <section class="editor-col">
+    <div class="toolbar">
+      <label>Where this logic lives
+        <select id="context">
+          <option value="branching">Branching logic</option>
+          <option value="calc">Calculated field</option>
+          <option value="calctext">@CALCTEXT</option>
+        </select>
+      </label>
+      <label>Examples
+        <select id="examples"></select>
+      </label>
+    </div>
+
+    <div class="editor" id="editor">
+      <pre class="hl" id="hl" aria-hidden="true"></pre>
+      <textarea id="input" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Logic" aria-autocomplete="list" aria-controls="completions" aria-describedby="result keys"></textarea>
+      <ul class="completions" id="completions" role="listbox" aria-label="Suggestions" hidden></ul>
+    </div>
+    <div class="signature" id="signature"></div>
+    <p class="sr-only" id="keys">Suggestions appear as you type. Press Control Space to ask for them, arrow keys to choose, Enter or Tab to accept, Escape to close. Problems are listed after the editor.</p>
+    <div class="sr-only" id="announce" aria-live="polite" aria-atomic="true"></div>
+
+    <div class="result" id="result"></div>
+    <h2 class="sr-only">Problems</h2>
+    <ul class="diagnostics" id="diagnostics"></ul>
+  </section>
+
+  <aside class="side">
+    <section>
+      <h2>At the cursor</h2>
+      <div id="inspect" class="inspect muted">Put the cursor on a field or function.</div>
+    </section>
+    <section>
+      <h2>Fields</h2>
+      <div id="fields" class="fields"></div>
+    </section>
+  </aside>
+</main>
+
+<script type="module" src="../dist/demo/editor.js"></script>
+</body>
+</html>
