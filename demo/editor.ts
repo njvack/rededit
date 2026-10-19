@@ -44,6 +44,7 @@ const diagEl = $<HTMLUListElement>("diagnostics");
 const inspectEl = $<HTMLDivElement>("inspect");
 const contextSel = $<HTMLSelectElement>("context");
 const exampleSel = $<HTMLSelectElement>("examples");
+const announceEl = $<HTMLDivElement>("announce");
 
 let analysis: Analysis;
 let popup: { result: CompletionResult; selected: number } | null = null;
@@ -61,6 +62,26 @@ function update() {
   renderResult();
   renderSignature();
   renderInspect();
+  scheduleAnnouncement();
+}
+
+let announceTimer: ReturnType<typeof setTimeout> | undefined;
+let lastAnnounced = "";
+
+/**
+ * Tells screen reader users about problems once typing pauses, and only when
+ * the summary changes, so the live region doesn't chatter on every key.
+ */
+function scheduleAnnouncement() {
+  clearTimeout(announceTimer);
+  announceTimer = setTimeout(() => {
+    const ds = analysis.diagnostics;
+    const text = !input.value.trim() ? "" : ds.length === 0 ? "No problems." : `${ds.length} problem${ds.length === 1 ? "" : "s"}. First: ${ds[0]!.message}`;
+    if (text !== lastAnnounced) {
+      lastAnnounced = text;
+      announceEl.textContent = text;
+    }
+  }, 900);
 }
 
 /**
@@ -107,9 +128,8 @@ function renderDiagnostics() {
     const li = document.createElement("li");
     li.className = d.severity;
     const snippet = src.slice(d.from, d.to);
-    li.innerHTML = `<span class="sev">${d.severity[0]!.toUpperCase()}${d.severity.slice(1)}</span><span class="msg">${escapeHtml(d.message)}</span>${snippet.trim() ? `<span class="where">${escapeHtml(snippet.length > 40 ? snippet.slice(0, 40) + "…" : snippet)}</span>` : ""}`;
-    li.addEventListener("click", (e) => {
-      if ((e.target as HTMLElement).tagName === "BUTTON") return;
+    li.innerHTML = `<span class="sev">${d.severity[0]!.toUpperCase()}${d.severity.slice(1)}</span><button type="button" class="msg" title="Select this in the editor">${escapeHtml(d.message)}</button>${snippet.trim() ? `<span class="where" aria-hidden="true">${escapeHtml(snippet.length > 40 ? snippet.slice(0, 40) + "…" : snippet)}</span>` : ""}`;
+    li.querySelector(".msg")!.addEventListener("click", () => {
       input.focus();
       input.setSelectionRange(d.from, d.to);
       update();
@@ -201,8 +221,13 @@ const KIND_MARK: Record<CompletionItem["kind"], string> = { field: "F", event: "
 function openCompletion(explicit: boolean) {
   const result = complete(input.value, input.selectionStart, { schema, explicit });
   if (!result || result.items.length === 0) return closeCompletion();
+  const wasOpen = popup !== null;
   popup = { result, selected: 0 };
   renderCompletion();
+  if (!wasOpen) {
+    lastAnnounced = "";
+    announceEl.textContent = `${result.items.length} suggestion${result.items.length === 1 ? "" : "s"}.`;
+  }
 }
 
 function closeCompletion() {

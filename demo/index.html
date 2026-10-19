@@ -29,12 +29,15 @@
 
     <div class="editor" id="editor">
       <pre class="hl" id="hl" aria-hidden="true"></pre>
-      <textarea id="input" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Logic" aria-autocomplete="list" aria-controls="completions"></textarea>
-      <ul class="completions" id="completions" role="listbox" hidden></ul>
+      <textarea id="input" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Logic" aria-autocomplete="list" aria-controls="completions" aria-describedby="result keys"></textarea>
+      <ul class="completions" id="completions" role="listbox" aria-label="Suggestions" hidden></ul>
     </div>
-    <div class="signature" id="signature" aria-live="polite"></div>
+    <div class="signature" id="signature"></div>
+    <p class="sr-only" id="keys">Suggestions appear as you type. Press Control Space to ask for them, arrow keys to choose, Enter or Tab to accept, Escape to close. Problems are listed after the editor.</p>
+    <div class="sr-only" id="announce" aria-live="polite" aria-atomic="true"></div>
 
     <div class="result" id="result"></div>
+    <h2 class="sr-only">Problems</h2>
     <ul class="diagnostics" id="diagnostics"></ul>
   </section>
 
